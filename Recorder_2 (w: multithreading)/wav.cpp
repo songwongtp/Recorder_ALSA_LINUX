@@ -7,7 +7,7 @@ char waveRecorder::format_marker[4];
 uint32_t waveRecorder::file_size = 0;
 uint32_t waveRecorder::data_header_length = 16;
 uint16_t waveRecorder::format_type = 1;
-uint16_t waveRecorder::number_of_channels = 2;
+uint16_t waveRecorder::number_of_channels = 2; //1 for mono, 2 for stereo
 uint32_t waveRecorder::sample_rate = 44000;
 //uint32_t waveRecorder::sample_rate = 8000;
 uint16_t waveRecorder::bits_per_sample = 16;
@@ -175,7 +175,7 @@ int waveRecorder::recordWAV(){
 
     fileName = name + std::to_string(part) + type;
 
-    uint32_t pcm_data_size = sample_rate * bytes_per_frame * duration / 1000;
+    uint32_t pcm_data_size = sample_rate * bytes_per_frame * duration;
     file_size = pcm_data_size + 44 - 8;
 
     filedesc = open(fileName.c_str(), O_WRONLY | O_CREAT, 0644);
@@ -192,9 +192,8 @@ int waveRecorder::recordWAV(){
     fprintf(stdout, "Channels: %d\n", number_of_channels);
     while(recordFlag){
         if(duration == 10){
-            duration *= 1000;
             //Rewrite the header
-            pcm_data_size = sample_rate * bytes_per_frame * duration / 1000;
+            pcm_data_size = sample_rate * bytes_per_frame * duration;
             file_size = pcm_data_size + 44 - 8;
 
             filedesc = open(fileName.c_str(), O_WRONLY | O_CREAT, 0644);     
@@ -208,7 +207,7 @@ int waveRecorder::recordWAV(){
             part ++;
             fileName = name + std::to_string(part) + type;
 
-            pcm_data_size = sample_rate * bytes_per_frame * duration / 1000;
+            pcm_data_size = sample_rate * bytes_per_frame * duration;
             file_size = pcm_data_size + 44 - 8;
     
             filedesc = open(fileName.c_str(), O_WRONLY | O_CREAT, 0644);
@@ -246,9 +245,8 @@ int waveRecorder::recordWAV(){
 
     close(filedesc);
 
-    duration *= 1000;
     //Rewrite the header
-    pcm_data_size = sample_rate * bytes_per_frame * duration / 1000;
+    pcm_data_size = sample_rate * bytes_per_frame * duration;
     file_size = pcm_data_size + 44 - 8;
 
     filedesc = open(fileName.c_str(), O_WRONLY | O_CREAT, 0644);
